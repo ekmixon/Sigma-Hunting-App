@@ -7,7 +7,7 @@ class ConfigApp(admin.MConfigHandler):
   '''
   def setup(self):
     if self.requestedAction == admin.ACTION_EDIT:
-      for arg in ['repository', 'folder']:
+      for arg in ['repository', 'folder', 'tdm_api_key']:
         self.supportedArgs.addOptArg(arg)
         
   '''
@@ -36,6 +36,8 @@ class ConfigApp(admin.MConfigHandler):
             val = ''
           if key in ['folder'] and val in [None, '']:
             val = ''
+          if key in ['tdm_api_key'] and val in [None, '']:
+            val = ''
           confInfo[stanza].append(key, val)
           
   '''
@@ -50,7 +52,10 @@ class ConfigApp(admin.MConfigHandler):
       self.callerArgs.data['repository'][0] = ''  
 
     if self.callerArgs.data['folder'][0] in [None, '']:
-      self.callerArgs.data['folder'][0] = ''  
+      self.callerArgs.data['folder'][0] = ''
+
+    if self.callerArgs.data['tdm_api_key'][0] in [None, '']:
+      self.callerArgs.data['tdm_api_key'][0] = ''
 
         
     '''
