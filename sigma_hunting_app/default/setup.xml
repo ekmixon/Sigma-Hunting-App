@@ -16,7 +16,7 @@
         <type>text</type>
       </input>
 </block>
- <block title="TDM API Key" endpoint="mycustom/customendpoint" entity="settings">
+ <block title="SOC Prime Threat Detection Marketplace (TDM) API Key" endpoint="mycustom/customendpoint" entity="settings">
      <text>Enter your TDM API key here. Leave empty if you do not want to use SOC Prime TDM sigma rule feed.</text>
 <text>To get a valid TDM API key go to tdm.socprime.com.</text>
            <input field="tdm_api_key">

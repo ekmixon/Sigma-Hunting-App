@@ -56,7 +56,6 @@ class ConfigApp(admin.MConfigHandler):
 
     if self.callerArgs.data['tdm_api_key'][0] in [None, '']:
       self.callerArgs.data['tdm_api_key'][0] = ''
-
         
     '''
     Since we are using a conf file to store parameters, 
