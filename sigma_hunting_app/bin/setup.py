@@ -29,7 +29,7 @@ class ConfigApp(admin.MConfigHandler):
 
   def handleList(self, confInfo):
     confDict = self.readConf("settings")
-    if None != confDict:
+    if confDict != None:
       for stanza, settings in confDict.items():
         for key, val in settings.items():
           if key in ['repository'] and val in [None, '']:
@@ -47,7 +47,7 @@ class ConfigApp(admin.MConfigHandler):
   def handleEdit(self, confInfo):
     name = self.callerArgs.id
     args = self.callerArgs
-    
+
     if self.callerArgs.data['repository'][0] in [None, '']:
       self.callerArgs.data['repository'][0] = ''  
 
@@ -56,13 +56,13 @@ class ConfigApp(admin.MConfigHandler):
 
     if self.callerArgs.data['tdm_api_key'][0] in [None, '']:
       self.callerArgs.data['tdm_api_key'][0] = ''
-        
+
     '''
     Since we are using a conf file to store parameters, 
 write them to the [setupentity] stanza
     in app_name/local/myappsetup.conf  
     '''
-        
+
     self.writeConf('settings', 'settings', self.callerArgs.data)
       
 # initialize the handler

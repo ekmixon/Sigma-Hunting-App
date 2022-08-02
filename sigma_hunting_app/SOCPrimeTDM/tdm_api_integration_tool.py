@@ -32,9 +32,7 @@ PREFIX_MAPPING = 'custom-field-mapping'
 
 
 RES_FRM_FILE = 'txt'  # default
-FRM_FILES = ['yaml']
-FRM_FILES.append(RES_FRM_FILE)
-
+FRM_FILES = ['yaml', RES_FRM_FILE]
 RES_DIR = os.path.join(BASE_DIR, 'output')
 
 
@@ -59,7 +57,7 @@ class Logger:
         if not os.path.exists(self.logPath):
             self.logPath = os.path.dirname(os.path.abspath(__file__))
 
-        LOG_FILENAME = os.path.normpath('{}/{}.log'.format(self.logPath, logger_name))
+        LOG_FILENAME = os.path.normpath(f'{self.logPath}/{logger_name}.log')
 
         fh = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=5242880, backupCount=10)
         fh.setLevel(logging.INFO)
@@ -86,7 +84,7 @@ class Logger:
 
     def log(self, level, msg):
         msg = str(msg).replace('%', '')
-        self.logger.log(level, str(msg) +' %s', '')
+        self.logger.log(level, f'{msg} %s', '')
 
 
 def query_api(logger, **kwargs):
@@ -169,11 +167,9 @@ def is_date(logger, string: str) -> bool:
 
 
 def validate_json_frm(logger, data_json) -> bool:
-    if not all(k in data_json for k in (KEY_DATE_END, KEY_DATE_START)):
+    if any(k not in data_json for k in (KEY_DATE_END, KEY_DATE_START)):
         return False
-    if not all(is_date(logger, string) for string in data_json.values()):
-        return False
-    return True
+    return all((is_date(logger, string) for string in data_json.values()))
 
 
 def pre_validate_global_variable(logger):
@@ -233,7 +229,7 @@ def post_validate_global_variable(logger):
 
 
 def run_query_apis(logger):
-    mapping_list = list()
+    mapping_list = []
     logger = logger
     logger.info(f'current last time: {LAST_DATETIME}')
 
@@ -288,10 +284,10 @@ def valid_str_date(s: str) -> str or None:
             raise AttributeError
         return input_date.strftime(FRM_DATETIME)
     except ValueError:
-        msg = "Not a valid date: '{}'".format(s)
+        msg = f"Not a valid date: '{s}'"
         raise argparse.ArgumentTypeError(msg)
     except AttributeError:
-        msg = "Not a valid date, this future date: '{}'".format(s)
+        msg = f"Not a valid date, this future date: '{s}'"
         raise argparse.ArgumentTypeError(msg)
 
 
@@ -323,10 +319,10 @@ if __name__ == '__main__':
                         help='get sigma mapping field rules')
 
     args = parser.parse_args()
-    RES_DIR = args.path_dir if args.path_dir else RES_DIR
-    RES_FRM_FILE = args.format_file if args.format_file else RES_FRM_FILE
-    API_KEY = args.api_key if args.api_key else API_KEY
-    MAPPING = args.mapping_field if args.mapping_field else MAPPING
+    RES_DIR = args.path_dir or RES_DIR
+    RES_FRM_FILE = args.format_file or RES_FRM_FILE
+    API_KEY = args.api_key or API_KEY
+    MAPPING = args.mapping_field or MAPPING
 
     if args.startdate:
         USE_DATETIME = args.startdate
